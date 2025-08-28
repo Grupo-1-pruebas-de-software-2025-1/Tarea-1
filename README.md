@@ -4,9 +4,6 @@
 - Bruno Flores
 - Francisca Figueroa
 
-### ¿Cómo vamos a probarlo?
-Se realizarán pruebas funcioanles sobre las principales requerimientos del sistema (login, CRUD de eventos, gestión de entradas y reportes). Estas pruebas se harán manualmente. De ser posible, se podrían realizar pruebas automatizadas posteriormente.
-
 ## Estrategía de Pruebas
 ### ¿Cómo vamos a probarlo?
 - Cada integrante prueba el módulo que desarrolló (prueba individual).
