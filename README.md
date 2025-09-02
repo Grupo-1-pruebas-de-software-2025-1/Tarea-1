@@ -44,6 +44,17 @@ Cada evento cuenta con los siguientes atributos:
 - Falta especificación sobre **registro de ventas/devoluciones**.  
   - Una idea sería establecer un **plazo** en el cual se pueden realizar las devoluciones.
 
+ ## Flujo de administración del código fuente 
+ Se utilizará el GitHub Flow, por ser un modelo simple, flexible y adecuado para equipos pequeños.
+ 
+ ### Ramas:
+ - main: Contiene siempre la última versión estable y funcional del proyecto. Estará protegida (no se puede hacer push directo).
+ - Ramas de funcionalidad (feature/...): Cada nueva funcionalidad o módulo se desarrollará en una rama propia.
+
+ ### Pull Request (PR)
+ - Todo cambio deberá ser propuesto mediante un Pull Request (PR) hacia la rama main.
+ - Cada integrante deberá revisar y aprobar el PR del otro antes de poder hacer merge.
+ - Se fomentará el uso de comentarios en PRs para mejorar la calidad del código.
 
 ## Estrategía de Pruebas
 ### ¿Cómo vamos a probarlo?
