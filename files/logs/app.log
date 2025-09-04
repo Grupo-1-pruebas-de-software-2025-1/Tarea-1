@@ -1,0 +1,2 @@
+Logger logger = LogManager.getLogger(Main.class);
+logger.info("Programa iniciado");
