@@ -8,9 +8,11 @@ import java.util.Scanner;
 
 public class Menu {
     private EventoManager eventoManager;
+    private VentaManager ventaManager;
 
     public Menu() {
         this.eventoManager = new EventoManager();
+        this.ventaManager = new VentaManager(eventoManager);
     }
 
     public void iniciar() {
@@ -39,6 +41,7 @@ public class Menu {
             // TODO: Implementar manejo de las distintas opciones
             switch (opcion) {
                 case 1 -> manejarEventos(scanner);
+                case 3 -> manejarVenta(scanner);
                 default -> {
                     System.out.println("Opción no válida");
                     salir = true;
@@ -72,6 +75,24 @@ public class Menu {
             }
         }
     }
+
+    private void manejarVenta(Scanner scanner) {
+        scanner.nextLine(); // limpiar buffer
+        System.out.print("Ingrese el nombre del evento: ");
+        String nombreEvento = scanner.nextLine();
+
+        System.out.print("Ingrese la cantidad de entradas: ");
+        int cantidad = scanner.nextInt();
+
+        boolean exito = ventaManager.registrarVenta(nombreEvento, cantidad);
+
+        if (exito) {
+            System.out.println("🟢 Venta registrada con éxito.");
+        } else {
+            System.out.println("🔴 Venta no realizada.");
+        }
+    }      
+
 
     private void manejarCrearEvento(Scanner scanner) {
         try {
