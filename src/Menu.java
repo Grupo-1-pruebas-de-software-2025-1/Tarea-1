@@ -1,5 +1,3 @@
-package src;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.InputMismatchException;
@@ -9,10 +7,14 @@ import java.util.Scanner;
 public class Menu {
     private EventoManager eventoManager;
     private VentaManager ventaManager;
+    private ReporteManager reporteManager;
+
 
     public Menu() {
         this.eventoManager = new EventoManager();
         this.ventaManager = new VentaManager(eventoManager);
+        this.reporteManager = new ReporteManager(eventoManager);
+
     }
 
     public void iniciar() {
@@ -41,7 +43,9 @@ public class Menu {
             // TODO: Implementar manejo de las distintas opciones
             switch (opcion) {
                 case 1 -> manejarEventos(scanner);
+                case 2 -> reporteManager.generarReporte();
                 case 3 -> manejarVenta(scanner);
+                case 4 -> manejarRegistrarDevolucion(scanner);
                 default -> {
                     System.out.println("Opción no válida");
                     salir = true;
@@ -69,7 +73,7 @@ public class Menu {
                 case 1 -> manejarCrearEvento(scanner);
                 case 2 -> manejarMostrarEventos();
                 case 3 -> manejarEditarEvento(scanner);
-                case 4 -> manejarEliminarEvento(scanner);
+                case 4 -> manejarRegistrarDevolucion(scanner);
                 case 0 -> volver = true; // Regresa al menú principal
                 default -> System.out.println("Opción no válida, intente de nuevo.");
             }
@@ -92,6 +96,22 @@ public class Menu {
             System.out.println("🔴 Venta no realizada.");
         }
     }      
+
+    private void manejarRegistrarDevolucion(Scanner scanner) {
+        System.out.print("Ingrese el nombre del evento: ");
+        scanner.nextLine(); // limpiar buffer
+        String nombreEvento = scanner.nextLine();
+
+        System.out.print("Ingrese la cantidad de entradas a devolver: ");
+        int cantidad = scanner.nextInt();
+
+        boolean exito = ventaManager.registrarDevolucion(nombreEvento, cantidad);
+        if (exito) {
+            System.out.println("✅ Devolución registrada correctamente.");
+        } else {
+            System.out.println("❌ No se pudo registrar la devolución.");
+        }
+    }
 
 
     private void manejarCrearEvento(Scanner scanner) {
