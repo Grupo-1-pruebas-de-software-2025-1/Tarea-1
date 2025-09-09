@@ -7,10 +7,14 @@ import java.util.Scanner;
 public class Menu {
     private EventoManager eventoManager;
     private VentaManager ventaManager;
+    private ReporteManager reporteManager;
+
 
     public Menu() {
         this.eventoManager = new EventoManager();
         this.ventaManager = new VentaManager(eventoManager);
+        this.reporteManager = new ReporteManager(eventoManager);
+
     }
 
     public void iniciar() {
@@ -39,6 +43,7 @@ public class Menu {
             // TODO: Implementar manejo de las distintas opciones
             switch (opcion) {
                 case 1 -> manejarEventos(scanner);
+                case 2 -> reporteManager.generarReporte();
                 case 3 -> manejarVenta(scanner);
                 case 4 -> manejarRegistrarDevolucion(scanner);
                 default -> {
