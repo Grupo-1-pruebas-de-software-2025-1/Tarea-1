@@ -10,7 +10,7 @@
 
         <!-- Log en archivo -->
         <File name="FileLogger" fileName="files/logs/app.log" append="true">
-            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level: %msg%n"/>
+            <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %c{1}.%M: %msg%n"/>
         </File>
     </Appenders>
 

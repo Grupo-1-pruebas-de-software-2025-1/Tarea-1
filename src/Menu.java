@@ -1,40 +1,46 @@
 package src;
 
+import java.io.Console;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Menu {
     private EventoManager eventoManager;
+    private UsuarioManager usuarioManager;
+    private Usuario usuarioActual = null;
+    private static final Logger logger = LogManager.getLogger(Menu.class);
 
     public Menu() {
         this.eventoManager = new EventoManager();
+        this.usuarioManager = new UsuarioManager();
     }
 
     public void iniciar() {
-
-        // TODO: Manejo de autenticacion de usuario
 
         System.out.println("----------------------------\n");
         System.out.println("Bienvenido(a)\n");
         System.out.println("----------------------------\n");
 
-        boolean salir = false;
         Scanner scanner = new Scanner(System.in);
 
+        autenticarUsuario(scanner);
 
+        boolean salir = false;
         while (!salir) {
             mostrarOpciones();
             int opcion = -1;
             try {
                 opcion = scanner.nextInt();
             } catch (InputMismatchException e) {
-            System.out.println("Entrada inválida. Por favor ingrese un número.");
-            scanner.nextLine();
-            continue;
-    }
+                System.out.println("Entrada inválida. Por favor ingrese un número.");
+                scanner.nextLine();
+                continue;
+            }
 
             // TODO: Implementar manejo de las distintas opciones
             switch (opcion) {
@@ -46,6 +52,73 @@ public class Menu {
             }
         }
         scanner.close();
+    }
+
+    private void autenticarUsuario(Scanner scanner) {
+        boolean autenticado = false;
+        while (!autenticado) {
+            System.out.println("¿Qué desea hacer?");
+            System.out.println("1. Iniciar sesión");
+            System.out.println("2. Registrarse");
+            System.out.print("Seleccione una opción: ");
+            String opcion = scanner.nextLine();
+
+            switch (opcion) {
+                case "1" -> {
+                    System.out.print("Nombre de usuario: ");
+                    String nombre = scanner.nextLine();
+                    char[] clave;
+                    Console console = System.console();
+                    if (console != null) {
+                        clave = console.readPassword("Clave: ");
+                    } else {
+                        System.out.print("Clave: ");
+                        clave = scanner.nextLine().toCharArray();
+                    }
+                    try {
+                        Usuario usuario = usuarioManager.autenticar(nombre, clave);
+                        if (usuario != null) {
+                            usuarioActual = usuario;
+                            autenticado = true;
+                            System.out.println("¡Bienvenido, " + usuario.getNombre() + "!");
+                        } else {
+                            System.out.println("Usuario o clave incorrectos. Intente de nuevo.");
+                        }
+                    } catch (Exception e) {
+                        System.out.println("Error durante la autenticación: " + e.getMessage());
+                        logger.error("Error durante la autenticación desde menú para usuario {}: {}", nombre, e.getMessage());
+                    }
+                }
+                case "2" -> {
+                    System.out.print("Elija un nombre de usuario: ");
+                    String nombre = scanner.nextLine();
+                    char[] clave;
+                    Console console = System.console();
+                    if (console != null) {
+                        clave = console.readPassword("Elija una clave: ");
+                    } else {
+                        System.out.print("Elija una clave: ");
+                        clave = scanner.nextLine().toCharArray();
+                    }
+                    try {
+                        boolean registrado = usuarioManager.registrarUsuario(nombre, clave);
+                        if (registrado) {
+                            System.out.println("Usuario registrado con éxito. Ahora puede iniciar sesión.");
+                        } else {
+                            System.out.println("El usuario ya existe. Intente con otro nombre.");
+                        }
+                    } catch (Exception e) {
+                        System.out.println("Error durante el registro: " + e.getMessage());
+                        logger.error("Error durante el registro desde menú para usuario {}: {}", nombre, e.getMessage());
+                    }
+                }
+                case "0" -> {
+                    System.out.println("Saliendo del programa. ¡Hasta luego!");
+                    System.exit(0);
+                }
+                default -> System.out.println("Opción no válida. Intente de nuevo.");
+            }
+        }
     }
 
     private void manejarEventos(Scanner scanner) {
