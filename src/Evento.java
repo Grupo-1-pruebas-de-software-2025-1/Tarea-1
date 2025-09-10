@@ -8,6 +8,7 @@ public class Evento {
     private String categoria;
     private int precioEntrada;
     private int cuposDisponibles;
+    private int cuposMaximos;
 
     public Evento() {}
 
@@ -18,6 +19,7 @@ public class Evento {
         this.categoria = categoria;
         this.precioEntrada = precioEntrada;
         this.cuposDisponibles = cuposDisponibles;
+        this.cuposMaximos = cuposDisponibles;
     }
 
     public String getNombre() {
@@ -66,6 +68,14 @@ public class Evento {
 
     public void setCuposDisponibles(int cuposDisponibles) {
         this.cuposDisponibles = cuposDisponibles;
+    }
+
+    public int getCuposMaximos() {
+        return cuposMaximos;
+    }
+
+    public void setCuposMaximos(int cuposMaximos) {
+        this.cuposMaximos = cuposMaximos;
     }
     
 }
