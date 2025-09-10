@@ -1,6 +1,1 @@
-<<<<<<< HEAD
-Concierto A|Descripción A|2025-10-12|Show|30000|45|50
-=======
-Concierto 1|Descripción 1|2025-10-21|Show|50000|8
-Concierto A|Descripción A|2025-10-21|Show|50000|28
->>>>>>> feature/manejo-ventas
+Concierto A|Descripción A|2025-10-12|Show|30000|47|50

@@ -55,57 +55,34 @@ public class VentaManager {
         return false;
     }
 
-    // ------------------ Registrar Devolución ------------------
     public boolean registrarDevolucion(String nombreEvento, int cantidad) {
-        var eventos = eventoManager.consultarEventos();
+    var eventos = eventoManager.consultarEventos();
 
-        for (Evento e : eventos) {
-            if (e.getNombre().equalsIgnoreCase(nombreEvento)) {
-                int cuposMax = e.getCuposMaximos(); 
-                int cuposDispo = e.getCuposDisponibles();
-                System.out.println("Cupos máximos: " + cuposMax);
-                System.out.println("Cupos disponibles: " + cuposDispo);
-                int vendidas = cuposMax - cuposDispo;
-                System.out.println("Vendidas: " + vendidas);
+    for (Evento e : eventos) {
+        if (e.getNombre().equalsIgnoreCase(nombreEvento)) {
+            int cuposMax = e.getCuposMaximos();
+            int cuposDispo = e.getCuposDisponibles();
+            int vendidas = cuposMax - cuposDispo;
 
-                if (cantidad <= vendidas) {
-                    // Aumentar los cupos disponibles
-                    e.setCuposDisponibles(e.getCuposDisponibles() + cantidad);
-                    eventoManager.editarEvento(
-                        nombreEvento, 
-                        "cuposDisponibles", 
-                        String.valueOf(e.getCuposDisponibles())
-                    );
+            if (cantidad <= vendidas) {
+                e.setCuposDisponibles(e.getCuposDisponibles() + cantidad);
+                eventoManager.editarEvento(
+                    nombreEvento,
+                    "cuposDisponibles",
+                    String.valueOf(e.getCuposDisponibles())
+                );
 
-                    // Guardar en archivo
-                    try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH_DEVOLUCIONES, true))) {
-                        writer.write("Evento: " + e.getNombre() +
-                                    " | Cantidad devuelta: " + cantidad +
-                                    " | Fecha: " + LocalDateTime.now());
-                        writer.newLine();
-                    } catch (IOException ex) {
-                        logger.error("Error al registrar la devolución en archivo: {}", ex.getMessage());
-                    }
-
-                    // Log de éxito
-                    logger.info("Devolución registrada - Evento: {}, Cantidad: {}, Fecha: {}",
-                                e.getNombre(), cantidad, LocalDateTime.now());
-                    return true;
-                } else {
-                    // Si intenta devolver más de lo vendido
-                    logger.warn("Devolución rechazada - Evento: {}, Cantidad solicitada: {}, Vendidas: {}",
-                                e.getNombre(), cantidad, vendidas);
-                    System.out.println("🔴 La devolución supera la cantidad de entradas vendidas.");
-                    return false;
-                }
+                return true;
+            } else {
+                System.out.println("❌ La devolución supera la cantidad de entradas vendidas.");
+                return false;
             }
         }
-
-        // Evento no encontrado
-        logger.warn("Devolución rechazada - Evento no encontrado: {}, Cantidad solicitada: {}",
-                    nombreEvento, cantidad);
-        System.out.println("🔴 Evento no encontrado.");
-        return false;
     }
+    System.out.println("❌ Evento no encontrado.");
+    return false;
+}
+
+
 
 }

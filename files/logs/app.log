@@ -19,3 +19,4 @@ logger.info("Programa iniciado");2025-09-10 12:10:31 [main] INFO : Venta registr
 2025-09-10 12:33:13 [main] INFO : Venta registrada - Evento: Concierto A, Cantidad: 20, Fecha: 2025-09-10T12:33:13.021968
 2025-09-10 12:33:36 [main] INFO : Venta registrada - Evento: Concierto A, Cantidad: 2, Fecha: 2025-09-10T12:33:36.003490
 >>>>>>> feature/manejo-ventas
+2025-09-10 12:47:14 [main] WARN : Devolución rechazada - Evento no encontrado: Concierto B, Cantidad solicitada: 50

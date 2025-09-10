@@ -30,6 +30,7 @@ public class Menu {
             int opcion = -1;
             try {
                 opcion = scanner.nextInt();
+                scanner.nextLine();
             } catch (InputMismatchException e) {
             System.out.println("Entrada inválida. Por favor ingrese un número.");
             scanner.nextLine();
@@ -118,22 +119,48 @@ public class Menu {
         }
     }
     
+private void manejarRegistrarDevolucion(Scanner scanner) {
+    String nombreEvento;
+    int cantidad;
 
-    private void manejarRegistrarDevolucion(Scanner scanner) {
+    // 1. Pedir evento hasta que exista
+    while (true) {
         System.out.print("Ingrese el nombre del evento: ");
-        scanner.nextLine(); // limpiar buffer
-        String nombreEvento = scanner.nextLine();
+        nombreEvento = scanner.nextLine().trim(); // solo una vez
 
+        Evento evento = eventoManager.buscarEvento(nombreEvento);
+        if (evento != null) {
+            break; // existe, seguimos
+        }
+        System.out.println("❌ El evento no existe. Intente nuevamente.");
+    }
+
+    // 2. Pedir cantidad hasta que sea número válido (>0)
+    while (true) {
         System.out.print("Ingrese la cantidad de entradas a devolver: ");
-        int cantidad = scanner.nextInt();
+        String input = scanner.nextLine().trim(); // solo una vez
 
-        boolean exito = ventaManager.registrarDevolucion(nombreEvento, cantidad);
-        if (exito) {
-            System.out.println("✅ Devolución registrada correctamente.");
-        } else {
-            System.out.println("❌ No se pudo registrar la devolución.");
+        try {
+            cantidad = Integer.parseInt(input);
+            if (cantidad > 0) {
+                break; // válido
+            } else {
+                System.out.println("❌ La cantidad debe ser mayor a 0.");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("❌ Entrada inválida. Debe ingresar un número.");
         }
     }
+
+    // 3. Registrar devolución
+    boolean exito = ventaManager.registrarDevolucion(nombreEvento, cantidad);
+    if (exito) {
+        System.out.println("✅ Devolución registrada correctamente.");
+    } else {
+        System.out.println("❌ No se pudo registrar la devolución.");
+    }
+}
+
 
 
     private void manejarCrearEvento(Scanner scanner) {
