@@ -1,4 +1,3 @@
-package src;
 
 import java.io.Console;
 import java.time.LocalDate;
@@ -17,7 +16,6 @@ public class Menu {
 
     public Menu() {
         this.eventoManager = new EventoManager();
-        this.usuarioManager = new UsuarioManager();
     }
 
     public void iniciar() {
@@ -45,6 +43,7 @@ public class Menu {
             // TODO: Implementar manejo de las distintas opciones
             switch (opcion) {
                 case 1 -> manejarEventos(scanner);
+                case 3 -> manejarVenta(scanner);
                 default -> {
                     System.out.println("Opción no válida");
                     salir = true;
@@ -145,6 +144,51 @@ public class Menu {
             }
         }
     }
+
+    private void manejarVenta(Scanner scanner) {
+        scanner.nextLine(); // limpiar buffer
+        
+        String nombreEvento;
+        Evento evento = null;
+        do {
+            System.out.print("Ingrese el nombre del evento: ");
+            nombreEvento = scanner.nextLine().trim();
+
+            if (nombreEvento.isEmpty()) {
+                System.out.println("⚠️ El nombre no puede estar vacío. Intente nuevamente.");
+                continue;
+            }
+
+            evento = eventoManager.buscarEvento(nombreEvento);
+            if (evento == null) {
+                System.out.println("❌ El evento \"" + nombreEvento + "\" no existe. Intente nuevamente.");
+            }
+        } while (evento == null);
+
+        int cantidad = -1;
+        while (cantidad <= 0) {
+            System.out.print("Ingrese la cantidad de entradas: ");
+            if (scanner.hasNextInt()) {
+                cantidad = scanner.nextInt();
+                if (cantidad <= 0) {
+                    System.out.println("⚠️ La cantidad debe ser mayor a 0.");
+                }
+            } else {
+                System.out.println("❌ Debe ingresar un número válido.");
+                scanner.nextLine(); // limpiar entrada inválida
+            }
+        }
+
+        boolean exito = ventaManager.registrarVenta(nombreEvento, cantidad);
+
+        if (exito) {
+            System.out.println("🟢 Venta registrada con éxito.");
+        } else {
+            System.out.println("🔴 Venta no realizada.");
+        }
+    }
+    
+
 
     private void manejarCrearEvento(Scanner scanner) {
         try {
