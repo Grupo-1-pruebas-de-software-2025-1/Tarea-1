@@ -1,3 +1,7 @@
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+
 public class Usuario {
     private String nombre;
     private String clave;

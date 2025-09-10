@@ -12,6 +12,7 @@ public class Menu {
     private EventoManager eventoManager;
     private UsuarioManager usuarioManager;
     private Usuario usuarioActual = null;
+    private VentaManager ventaManager;
     private static final Logger logger = LogManager.getLogger(Menu.class);
 
     public Menu() {
