@@ -1,5 +1,11 @@
 Evento: Concierto 1 | Cantidad: 90 | Fecha: 2025-09-08T20:16:55.606650
 Evento: Concierto 1 | Cantidad: 2 | Fecha: 2025-09-08T20:48:31.298840
+<<<<<<< HEAD
 Evento: Concierto A | Cantidad: 10 | Fecha: 2025-09-09T12:55:27.344216
 Evento: Concierto B | Cantidad: 20 | Fecha: 2025-09-09T13:15:24.138404
 Evento: Concierto A | Cantidad: 10 | Fecha: 2025-09-09T13:22:30.965375
+=======
+Evento: Concierto A | Cantidad: 10 | Fecha: 2025-09-10T12:10:31.032190
+Evento: Concierto A | Cantidad: 20 | Fecha: 2025-09-10T12:33:13.019445
+Evento: Concierto A | Cantidad: 2 | Fecha: 2025-09-10T12:33:36.002874
+>>>>>>> feature/manejo-ventas

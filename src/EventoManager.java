@@ -1,3 +1,5 @@
+
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -154,4 +156,14 @@ public class EventoManager {
 
         return encontrado;
     }
+
+    public Evento buscarEvento(String nombreEvento) {
+    List<Evento> eventos = consultarEventos(); 
+    for (Evento e : eventos) {
+        if (e.getNombre().equalsIgnoreCase(nombreEvento)) {
+            return e;
+        }
+    }
+    return null;
+}
 }
