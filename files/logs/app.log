@@ -1,2 +1,6 @@
 Logger logger = LogManager.getLogger(Main.class);
-logger.info("Programa iniciado");
+logger.info("Programa iniciado");2025-09-10 12:10:31 [main] INFO : Venta registrada - Evento: Concierto A, Cantidad: 10, Fecha: 2025-09-10T12:10:31.036110
+2025-09-10 12:12:10 [main] WARN : Venta rechazada - Evento: Concierto A, Cantidad solicitada: 60, Cupos disponibles: 50
+2025-09-10 12:13:39 [main] WARN : Venta rechazada - Evento no encontrado: Concierto B, Cantidad solicitada: 30
+2025-09-10 12:33:13 [main] INFO : Venta registrada - Evento: Concierto A, Cantidad: 20, Fecha: 2025-09-10T12:33:13.021968
+2025-09-10 12:33:36 [main] INFO : Venta registrada - Evento: Concierto A, Cantidad: 2, Fecha: 2025-09-10T12:33:36.003490
