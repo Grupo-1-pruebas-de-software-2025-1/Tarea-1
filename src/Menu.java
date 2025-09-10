@@ -1,4 +1,3 @@
-
 import java.io.Console;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -17,6 +16,8 @@ public class Menu {
 
     public Menu() {
         this.eventoManager = new EventoManager();
+        this.ventaManager = new VentaManager(eventoManager);
+        this.usuarioManager = new UsuarioManager();
     }
 
     public void iniciar() {
@@ -60,6 +61,7 @@ public class Menu {
             System.out.println("¿Qué desea hacer?");
             System.out.println("1. Iniciar sesión");
             System.out.println("2. Registrarse");
+            System.out.println("0. Salir del programa");
             System.out.print("Seleccione una opción: ");
             String opcion = scanner.nextLine();
 
