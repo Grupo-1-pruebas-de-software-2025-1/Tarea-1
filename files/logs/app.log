@@ -1,6 +1,22 @@
 Logger logger = LogManager.getLogger(Main.class);
+<<<<<<< HEAD
+logger.info("Programa iniciado");2025-09-08 21:18:01 [main] WARN : Devolución rechazada - Evento: Concierto 1, Cantidad solicitada: 3, Cupos máximos: 8
+2025-09-08 21:20:10 [main] WARN : Devolución rechazada - Evento: Concierto 2, Cantidad solicitada: 2, Cupos máximos: 20
+2025-09-09 12:48:16 [main] WARN : Devolución rechazada - Evento: Concierto 2, Cantidad solicitada: 2, Cupos máximos: 20
+2025-09-09 12:49:42 [main] WARN : Devolución rechazada - Evento: Concierto A, Cantidad solicitada: 4, Cupos máximos: 50
+2025-09-09 12:52:57 [main] WARN : Devolución rechazada - Evento: Concierto A, Cantidad solicitada: 10, Vendidas: 0
+2025-09-09 12:55:27 [main] INFO : Venta registrada - Evento: Concierto A, Cantidad: 10, Fecha: 2025-09-09T12:55:27.346676
+2025-09-09 12:55:37 [main] WARN : Devolución rechazada - Evento: Concierto A, Cantidad solicitada: 5, Vendidas: 0
+2025-09-09 13:02:44 [main] WARN : Devolución rechazada - Evento: Concierto A, Cantidad solicitada: 5, Vendidas: 0
+2025-09-09 13:12:39 [main] WARN : Venta rechazada - Evento no encontrado: Concierto A, Cantidad solicitada: 10
+2025-09-09 13:15:24 [main] INFO : Venta registrada - Evento: Concierto B, Cantidad: 20, Fecha: 2025-09-09T13:15:24.140571
+2025-09-09 13:22:30 [main] INFO : Venta registrada - Evento: Concierto A, Cantidad: 10, Fecha: 2025-09-09T13:22:30.971594
+2025-09-09 13:22:42 [main] INFO : Devolución registrada - Evento: Concierto A, Cantidad: 5, Fecha: 2025-09-09T13:22:42.844880
+=======
 logger.info("Programa iniciado");2025-09-10 12:10:31 [main] INFO : Venta registrada - Evento: Concierto A, Cantidad: 10, Fecha: 2025-09-10T12:10:31.036110
 2025-09-10 12:12:10 [main] WARN : Venta rechazada - Evento: Concierto A, Cantidad solicitada: 60, Cupos disponibles: 50
 2025-09-10 12:13:39 [main] WARN : Venta rechazada - Evento no encontrado: Concierto B, Cantidad solicitada: 30
 2025-09-10 12:33:13 [main] INFO : Venta registrada - Evento: Concierto A, Cantidad: 20, Fecha: 2025-09-10T12:33:13.021968
 2025-09-10 12:33:36 [main] INFO : Venta registrada - Evento: Concierto A, Cantidad: 2, Fecha: 2025-09-10T12:33:36.003490
+>>>>>>> feature/manejo-ventas
+2025-09-10 12:47:14 [main] WARN : Devolución rechazada - Evento no encontrado: Concierto B, Cantidad solicitada: 50

@@ -1,4 +1,3 @@
-
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -9,7 +8,8 @@ import org.apache.logging.log4j.Logger;
 
 public class VentaManager {
 
-    private static final String FILE_PATH = "files/ventas.txt";
+    private static final String FILE_PATH_VENTAS = "files/ventas.txt";
+    private static final String FILE_PATH_DEVOLUCIONES = "files/devoluciones.txt";
     private static final Logger logger = LogManager.getLogger(VentaManager.class);
 
     private EventoManager eventoManager;
@@ -18,18 +18,17 @@ public class VentaManager {
         this.eventoManager = eventoManager;
     }
 
+    // ------------------ Registrar Venta ------------------
     public boolean registrarVenta(String nombreEvento, int cantidad) {
         var eventos = eventoManager.consultarEventos();
 
         for (Evento e : eventos) {
             if (e.getNombre().equalsIgnoreCase(nombreEvento)) {
                 if (e.getCuposDisponibles() >= cantidad) {
-                    // Descontar cupos
                     e.setCuposDisponibles(e.getCuposDisponibles() - cantidad);
                     eventoManager.editarEvento(nombreEvento, "cuposDisponibles", String.valueOf(e.getCuposDisponibles()));
 
-                    // Guardar en archivo de ventas
-                    try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH, true))) {
+                    try (BufferedWriter writer = new BufferedWriter(new FileWriter(FILE_PATH_VENTAS, true))) {
                         writer.write("Evento: " + e.getNombre() +
                                      " | Cantidad: " + cantidad +
                                      " | Fecha: " + LocalDateTime.now());
@@ -38,12 +37,10 @@ public class VentaManager {
                         logger.error("Error al registrar la venta en archivo: {}", ex.getMessage());
                     }
 
-                    // Log de venta exitosa
                     logger.info("Venta registrada - Evento: {}, Cantidad: {}, Fecha: {}",
                                 e.getNombre(), cantidad, LocalDateTime.now());
                     return true;
                 } else {
-                    // Log de venta fallida por falta de cupos
                     logger.warn("Venta rechazada - Evento: {}, Cantidad solicitada: {}, Cupos disponibles: {}",
                                 e.getNombre(), cantidad, e.getCuposDisponibles());
                     System.out.println("🔴 No hay cupos suficientes.");
@@ -52,10 +49,40 @@ public class VentaManager {
             }
         }
 
-        // Log de venta fallida porque el evento no existe
         logger.warn("Venta rechazada - Evento no encontrado: {}, Cantidad solicitada: {}",
                     nombreEvento, cantidad);
         System.out.println("🔴 Evento no encontrado.");
         return false;
     }
+
+    public boolean registrarDevolucion(String nombreEvento, int cantidad) {
+    var eventos = eventoManager.consultarEventos();
+
+    for (Evento e : eventos) {
+        if (e.getNombre().equalsIgnoreCase(nombreEvento)) {
+            int cuposMax = e.getCuposMaximos();
+            int cuposDispo = e.getCuposDisponibles();
+            int vendidas = cuposMax - cuposDispo;
+
+            if (cantidad <= vendidas) {
+                e.setCuposDisponibles(e.getCuposDisponibles() + cantidad);
+                eventoManager.editarEvento(
+                    nombreEvento,
+                    "cuposDisponibles",
+                    String.valueOf(e.getCuposDisponibles())
+                );
+
+                return true;
+            } else {
+                System.out.println("❌ La devolución supera la cantidad de entradas vendidas.");
+                return false;
+            }
+        }
+    }
+    System.out.println("❌ Evento no encontrado.");
+    return false;
+}
+
+
+
 }
