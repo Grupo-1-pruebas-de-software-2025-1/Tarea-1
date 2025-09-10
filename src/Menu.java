@@ -1,4 +1,3 @@
-package src;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -78,11 +77,37 @@ public class Menu {
 
     private void manejarVenta(Scanner scanner) {
         scanner.nextLine(); // limpiar buffer
-        System.out.print("Ingrese el nombre del evento: ");
-        String nombreEvento = scanner.nextLine();
+        
+        String nombreEvento;
+        Evento evento = null;
+        do {
+            System.out.print("Ingrese el nombre del evento: ");
+            nombreEvento = scanner.nextLine().trim();
 
-        System.out.print("Ingrese la cantidad de entradas: ");
-        int cantidad = scanner.nextInt();
+            if (nombreEvento.isEmpty()) {
+                System.out.println("⚠️ El nombre no puede estar vacío. Intente nuevamente.");
+                continue;
+            }
+
+            evento = eventoManager.buscarEvento(nombreEvento);
+            if (evento == null) {
+                System.out.println("❌ El evento \"" + nombreEvento + "\" no existe. Intente nuevamente.");
+            }
+        } while (evento == null);
+
+        int cantidad = -1;
+        while (cantidad <= 0) {
+            System.out.print("Ingrese la cantidad de entradas: ");
+            if (scanner.hasNextInt()) {
+                cantidad = scanner.nextInt();
+                if (cantidad <= 0) {
+                    System.out.println("⚠️ La cantidad debe ser mayor a 0.");
+                }
+            } else {
+                System.out.println("❌ Debe ingresar un número válido.");
+                scanner.nextLine(); // limpiar entrada inválida
+            }
+        }
 
         boolean exito = ventaManager.registrarVenta(nombreEvento, cantidad);
 
@@ -91,7 +116,8 @@ public class Menu {
         } else {
             System.out.println("🔴 Venta no realizada.");
         }
-    }      
+    }
+    
 
 
     private void manejarCrearEvento(Scanner scanner) {
