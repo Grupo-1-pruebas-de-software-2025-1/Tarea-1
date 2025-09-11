@@ -1,5 +1,3 @@
-
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -22,7 +20,8 @@ public class EventoManager {
                            evento.getFecha().format(DATE_FORMAT) + "|" +
                            evento.getCategoria() + "|" +
                            evento.getPrecioEntrada() + "|" +
-                           evento.getCuposDisponibles();
+                           evento.getCuposDisponibles() + "|" +
+                           evento.getCuposMaximos(); 
 
             writer.write(linea);
             writer.newLine();
@@ -40,15 +39,17 @@ public class EventoManager {
                 // Separar los campos por "|"
                 String[] campos = linea.split("\\|");
 
-                if (campos.length == 6) { // aseguramos que tenga todos los atributos
+                if (campos.length == 7) { // aseguramos que tenga todos los atributos
                     String nombre = campos[0];
                     String descripcion = campos[1];
                     LocalDate fecha = LocalDate.parse(campos[2]);
                     String categoria = campos[3];
                     int precioEntrada = Integer.parseInt(campos[4]);
                     int cuposDisponibles = Integer.parseInt(campos[5]);
+                    int cuposMaximos = Integer.parseInt(campos[6]);
 
                     Evento evento = new Evento(nombre, descripcion, fecha, categoria, precioEntrada, cuposDisponibles);
+                    evento.setCuposMaximos(cuposMaximos);
                     eventos.add(evento);
                 }
             }
@@ -76,6 +77,14 @@ public class EventoManager {
                         case "categoria" -> e.setCategoria(nuevoValor);
                         case "precioEntrada" -> e.setPrecioEntrada(Integer.parseInt(nuevoValor));
                         case "cuposDisponibles" -> e.setCuposDisponibles(Integer.parseInt(nuevoValor));
+                        case "cuposMaximos" -> {
+                            int nuevoMax = Integer.parseInt(nuevoValor);
+                            if (nuevoMax < e.getCuposDisponibles()) {
+                                System.out.println("No se puede establecer cupos máximos menores a los cupos disponibles actuales.");
+                                return false;
+                            }
+                            e.setCuposMaximos(nuevoMax);
+                        }
                     }
                 } catch (Exception ex) {
                     System.out.println("Valor inválido para el campo " + campo + ": " + ex.getMessage());
@@ -94,7 +103,8 @@ public class EventoManager {
                                 e.getFecha().format(DATE_FORMAT) + "|" +
                                 e.getCategoria() + "|" +
                                 e.getPrecioEntrada() + "|" +
-                                e.getCuposDisponibles();
+                                e.getCuposDisponibles() + "|" +
+                                e.getCuposMaximos();
                     writer.write(linea);
                     writer.newLine();
                 }
@@ -131,7 +141,8 @@ public class EventoManager {
                                 e.getFecha().format(DATE_FORMAT) + "|" +
                                 e.getCategoria() + "|" +
                                 e.getPrecioEntrada() + "|" +
-                                e.getCuposDisponibles();
+                                e.getCuposDisponibles() + "|" +
+                                e.getCuposMaximos();
                     writer.write(linea);
                     writer.newLine();
                 }
