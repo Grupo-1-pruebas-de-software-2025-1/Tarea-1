@@ -1,11 +1,12 @@
+import java.io.Console;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import java.io.Console;
 
 public class Menu {
     private static final Logger logger = LogManager.getLogger(Menu.class);
@@ -200,6 +201,8 @@ public class Menu {
     private void manejarRegistrarDevolucion(Scanner scanner) {
         String nombreEvento;
         int cantidad;
+
+        scanner.nextLine();
 
         // 1. Pedir evento hasta que exista
         while (true) {
