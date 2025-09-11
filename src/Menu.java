@@ -1,3 +1,4 @@
+import java.io.Console;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.InputMismatchException;
@@ -5,7 +6,9 @@ import java.util.List;
 import java.util.Scanner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import java.io.Console;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Menu {
     private static final Logger logger = LogManager.getLogger(Menu.class);
@@ -51,6 +54,11 @@ public class Menu {
                 case 2 -> reporteManager.generarReporte();
                 case 3 -> manejarVenta(scanner);
                 case 4 -> manejarRegistrarDevolucion(scanner);
+                case 0 -> {
+                    System.out.println("Saliendo del programa. ¡Hasta luego!");
+                    salir = true;
+                    System.exit(0);
+                }
                 default -> {
                     System.out.println("Opción no válida");
                     salir = true;
@@ -144,7 +152,7 @@ public class Menu {
 
             switch (opcionEvento) {
                 case 1 -> manejarCrearEvento(scanner);
-                case 2 -> manejarMostrarEventos();
+                case 2 -> manejarMostrarEventos(scanner);
                 case 3 -> manejarEditarEvento(scanner);
                 case 4 -> manejarEliminarEvento(scanner);
                 case 0 -> volver = true; // Regresa al menú principal
@@ -199,6 +207,8 @@ public class Menu {
     private void manejarRegistrarDevolucion(Scanner scanner) {
         String nombreEvento;
         int cantidad;
+
+        scanner.nextLine();
 
         // 1. Pedir evento hasta que exista
         while (true) {
@@ -325,36 +335,49 @@ public class Menu {
         }
     }
 
-    private void manejarMostrarEventos() {
-        List<Evento> eventos = eventoManager.consultarEventos();
-        if (eventos.isEmpty()) {
-            System.out.println("No hay eventos registrados.");
-        } else {
-            // Encabezado de la tabla
-            System.out.println("--------------------------------------------------------------------------------");
-            System.out.printf("%-20s %-30s %-12s %-10s %-10s %-10s%n",
-            "Nombre", "Descripcion", "Fecha", "Categoria", "Precio", "Cupos");
-            System.out.println("--------------------------------------------------------------------------------");
+    private void manejarMostrarEventos(Scanner scanner) {
+        boolean volver = false;
+        while (!volver) {
+            // Menú de acciones
+            System.out.println("\n--- Menú de eventos ---");
+            System.out.println("1. Ver todos los eventos");
+            System.out.println("2. Filtrar eventos");
+            System.out.println("3. Buscar evento por nombre");
+            System.out.println("0. Volver");
+            System.out.print("Seleccione una opción: ");
+            String opcion = scanner.nextLine();
 
-            // Recorrer eventos
-            for (Evento e : eventos) {
-                String desc = e.getDescripcion();
-                if (desc.length() > 30) {
-                    desc = desc.substring(0, 27) + "...";
+            switch (opcion) {
+                case "1" -> {
+                    List<Evento> eventos = eventoManager.consultarEventos();
+                    if (eventos.isEmpty()) {
+                        System.out.println("No hay eventos registrados.");
+                        logger.info("No hay eventos registrados al mostrar todos los eventos.");
+                    } else {
+                        imprimirTablaEventos(eventos);
+                        logger.info("Se mostraron {} eventos en formato tabla.", eventos.size());
+                    }
                 }
-
-                System.out.printf("%-20s %-30s %-12s %-10s %-10d %-10d%n",
-                    e.getNombre(),
-                    desc,
-                    e.getFecha().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")),
-                    e.getCategoria(),
-                    e.getPrecioEntrada(),
-                    e.getCuposDisponibles()
-                );
+                case "2" -> {
+                    logger.info("Usuario seleccionó filtrar eventos.");
+                    manejarFiltrarEventos(scanner);
+                }
+                case "3" -> {
+                    logger.info("Usuario seleccionó buscar evento por nombre.");
+                    manejarBuscarEventoPorNombre(scanner);
+                }
+                case "0" -> {
+                    logger.info("Usuario volvió al menú anterior desde mostrar eventos.");
+                    volver = true;
+                }
+                default -> {
+                    System.out.println("Opción no válida. Intente de nuevo.");
+                    logger.warn("Opción inválida en mostrar eventos: {}", opcion);
+                }
             }
-            System.out.println("--------------------------------------------------------------------------------");
         }
     }
+    
 
     private void manejarEditarEvento(Scanner scanner) {
         try {
@@ -494,7 +517,8 @@ public class Menu {
         System.out.println("1. Administrar eventos");
         System.out.println("2. Generar reportes");
         System.out.println("3. Añadir venta");
-        System.out.println("4. Eliminar venta (Devolucion)");   
+        System.out.println("4. Eliminar venta (Devolucion)");
+        System.out.println("0. Salir del programa");   
     }
 
     private void mostrarOpcionesEventos() {
@@ -505,6 +529,205 @@ public class Menu {
         System.out.println("4. Eliminar evento");
         System.out.println("0. Volver al menú principal");
 
+    }
+
+    private void manejarFiltrarEventos(Scanner scanner) {
+        boolean volver = false;
+        while (!volver) {
+            System.out.println("\n--- Filtrar eventos ---");
+            System.out.println("1. Por categoría");
+            System.out.println("2. Por fecha");
+            System.out.println("3. Por precio");
+            System.out.println("4. Por cupos");
+            System.out.println("0. Volver");
+            System.out.print("Seleccione una opción: ");
+            String opcion = scanner.nextLine();
+
+            switch (opcion) {
+                case "1" -> {
+                    // Filtrar por categoría
+                    String categoria = "";
+                    while (true) {
+                        System.out.print("Ingrese la categoría (Charla, Taller, Show): ");
+                        categoria = scanner.nextLine();
+                        if (categoria.equalsIgnoreCase("Charla") ||
+                            categoria.equalsIgnoreCase("Taller") ||
+                            categoria.equalsIgnoreCase("Show")) {
+                            break;
+                        } else {
+                            System.out.println("Categoría inválida. Debe ser 'Charla', 'Taller' o 'Show'.");
+                            logger.warn("Categoría inválida ingresada en filtro: {}", categoria);
+                        }
+                    }
+                    final String categoriaFiltro = categoria;
+                    List<Evento> eventos = eventoManager.consultarEventos();
+                    List<Evento> filtrados = eventos.stream()
+                            .filter(e -> e.getCategoria().equalsIgnoreCase(categoriaFiltro))
+                            .toList();
+                    System.out.println("Eventos en la categoría " + categoria + ":");
+                    if (filtrados.isEmpty()) {
+                        System.out.println("No hay eventos para esa categoría.");
+                        logger.info("No se encontraron eventos para la categoría '{}'.", categoria);
+                    } else {
+                        imprimirTablaEventos(filtrados);
+                        logger.info("Se filtraron {} eventos por categoría '{}'.", filtrados.size(), categoria);
+                    }
+                }
+                case "2" -> {
+                    // Filtrar por fecha
+                    LocalDate desde = null, hasta = null;
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                    while (desde == null) {
+                        System.out.print("Ingrese la fecha de inicio (YYYY-MM-DD): ");
+                        String desdeStr = scanner.nextLine();
+                        try {
+                            desde = LocalDate.parse(desdeStr, formatter);
+                        } catch (Exception e) {
+                            System.out.println("Formato de fecha inválido.");
+                            logger.warn("Fecha de inicio inválida: {}", desdeStr);
+                        }
+                    }
+                    while (hasta == null) {
+                        System.out.print("Ingrese la fecha de fin (YYYY-MM-DD): ");
+                        String hastaStr = scanner.nextLine();
+                        try {
+                            hasta = LocalDate.parse(hastaStr, formatter);
+                            if (hasta.isBefore(desde)) {
+                                System.out.println("La fecha de fin no puede ser anterior a la de inicio.");
+                                logger.warn("Fecha de fin anterior a la de inicio: {} < {}", hasta, desde);
+                                hasta = null;
+                            }
+                        } catch (Exception e) {
+                            System.out.println("Formato de fecha inválido.");
+                            logger.warn("Fecha de fin inválida: {}", hastaStr);
+                        }
+                    }
+                    final LocalDate desdeFinal = desde;
+                    final LocalDate hastaFinal = hasta;
+                    List<Evento> eventos = eventoManager.consultarEventos();
+                    List<Evento> filtrados = eventos.stream()
+                            .filter(e -> !e.getFecha().isBefore(desdeFinal) && !e.getFecha().isAfter(hastaFinal))
+                            .toList();
+                    System.out.println("Eventos entre " + desde + " y " + hasta + ":");
+                    if (filtrados.isEmpty()) {
+                        System.out.println("No hay eventos en ese rango de fechas.");
+                        logger.info("No se encontraron eventos entre {} y {}.", desde, hasta);
+                    } else {
+                        imprimirTablaEventos(filtrados);
+                        logger.info("Se filtraron {} eventos por fecha entre {} y {}.", filtrados.size(), desde, hasta);
+                    }
+                }
+                case "3" -> {
+                    // Filtrar por precio
+                    int precio = -1;
+                    while (precio < 0) {
+                        System.out.print("Ingrese el precio máximo: ");
+                        String precioStr = scanner.nextLine();
+                        try {
+                            precio = Integer.parseInt(precioStr);
+                            if (precio < 0) {
+                                System.out.println("El precio debe ser mayor o igual a 0.");
+                                logger.warn("Precio negativo ingresado: {}", precioStr);
+                            }
+                        } catch (NumberFormatException e) {
+                            System.out.println("Entrada inválida. Debe ser un número entero.");
+                            logger.warn("Precio inválido ingresado: {}", precioStr);
+                        }
+                    }
+                    final int precioFinal = precio;
+                    List<Evento> eventos = eventoManager.consultarEventos();
+                    List<Evento> filtrados = eventos.stream()
+                            .filter(e -> e.getPrecioEntrada() <= precioFinal)
+                            .toList();
+                    System.out.println("Eventos con precio de entrada menor o igual a " + precio + ":");
+                    if (filtrados.isEmpty()) {
+                        System.out.println("No hay eventos con ese precio.");
+                        logger.info("No se encontraron eventos con precio <= {}.", precio);
+                    } else {
+                        imprimirTablaEventos(filtrados);
+                        logger.info("Se filtraron {} eventos por precio <= {}.", filtrados.size(), precio);
+                    }
+                }
+                case "4" -> {
+                    // Filtrar por cupos
+                    int cupos = -1;
+                    while (cupos < 0) {
+                        System.out.print("Ingrese la cantidad mínima de cupos disponibles: ");
+                        String cuposStr = scanner.nextLine();
+                        try {
+                            cupos = Integer.parseInt(cuposStr);
+                            if (cupos < 0) {
+                                System.out.println("La cantidad debe ser mayor o igual a 0.");
+                                logger.warn("Cupos negativos ingresados: {}", cuposStr);
+                            }
+                        } catch (NumberFormatException e) {
+                            System.out.println("Entrada inválida. Debe ser un número entero.");
+                            logger.warn("Cupos inválidos ingresados: {}", cuposStr);
+                        }
+                    }
+                    final int cuposFinal = cupos;
+                    List<Evento> eventos = eventoManager.consultarEventos();
+                    List<Evento> filtrados = eventos.stream()
+                            .filter(e -> e.getCuposDisponibles() >= cuposFinal)
+                            .toList();
+                    System.out.println("Eventos con al menos " + cupos + " cupos disponibles:");
+                    if (filtrados.isEmpty()) {
+                        System.out.println("No hay eventos con esa cantidad de cupos.");
+                        logger.info("No se encontraron eventos con cupos >= {}.", cupos);
+                    } else {
+                        imprimirTablaEventos(filtrados);
+                        logger.info("Se filtraron {} eventos por cupos >= {}.", filtrados.size(), cupos);
+                    }
+                }
+                case "0" -> {
+                    logger.info("Usuario volvió al menú anterior desde filtrar eventos.");
+                    volver = true;
+                }
+                default -> {
+                    System.out.println("Opción no válida. Intente de nuevo.");
+                    logger.warn("Opción inválida en filtrar eventos: {}", opcion);
+                }
+            }
+        }
+    }
+
+    private void manejarBuscarEventoPorNombre(Scanner scanner) {
+        System.out.print("Ingrese el nombre o parte del nombre del evento: ");
+        String nombre = scanner.nextLine();
+        List<Evento> eventos = eventoManager.consultarEventos();
+        List<Evento> encontrados = eventos.stream()
+                .filter(e -> e.getNombre().toLowerCase().contains(nombre.toLowerCase()))
+                .toList();
+        if (encontrados.isEmpty()) {
+            System.out.println("No se encontraron eventos con ese nombre.");
+            logger.info("Búsqueda de evento por nombre '{}' no arrojó resultados.", nombre);
+        } else {
+            System.out.println("Resultados de búsqueda:");
+            imprimirTablaEventos(encontrados);
+            logger.info("Se encontraron {} eventos buscando por nombre '{}'.", encontrados.size(), nombre);
+        }
+    }
+
+    private void imprimirTablaEventos(List<Evento> eventos) {
+        System.out.printf("%-20s %-30s %-12s %-10s %-10s %-10s%n",
+                "Nombre", "Descripción", "Fecha", "Categoría", "Precio", "Cupos");
+        System.out.println("---------------------------------------------------------------------------------------------");
+        for (Evento e : eventos) {
+            String desc = e.getDescripcion();
+            if (desc.length() > 28) desc = desc.substring(0, 27) + "...";
+            System.out.printf("%-20s %-30s %-12s %-10s %-10d %-10d%n",
+                    e.getNombre(), desc, e.getFecha(), e.getCategoria(),
+                    e.getPrecioEntrada(), e.getCuposDisponibles());
+        }
+    }
+
+    private void imprimirEvento(Evento e) {
+        System.out.println("Nombre: " + e.getNombre() +
+                ", Descripción: " + e.getDescripcion() +
+                ", Fecha: " + e.getFecha() +
+                ", Categoría: " + e.getCategoria() +
+                ", Precio: " + e.getPrecioEntrada() +
+                ", Cupos: " + e.getCuposDisponibles());
     }
     
 }

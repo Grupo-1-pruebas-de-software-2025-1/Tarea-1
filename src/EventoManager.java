@@ -7,9 +7,12 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class EventoManager {
 
+    private static final Logger logger = LogManager.getLogger(EventoManager.class);
     private static final String FILE_PATH = "files/eventos.txt";
     private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
@@ -25,7 +28,9 @@ public class EventoManager {
 
             writer.write(linea);
             writer.newLine();
+            logger.info("Evento creado: {}", evento.getNombre());
         } catch (IOException e) {
+            logger.error("Error al guardar el evento '{}': {}", evento.getNombre(), e.getMessage());
             System.out.println("Error al guardar el evento: " + e.getMessage());
         }
     }
@@ -53,9 +58,12 @@ public class EventoManager {
                     eventos.add(evento);
                 }
             }
+            logger.info("Consulta de eventos realizada. Total: {}", eventos.size());
         } catch (IOException e) {
+            logger.error("Error al leer los eventos: {}", e.getMessage());
             System.out.println("Error al leer los eventos: " + e.getMessage());
         } catch (Exception e) {
+            logger.error("Error al procesar un evento: {}", e.getMessage());
             System.out.println("Error al procesar un evento: " + e.getMessage());
         }
 
@@ -86,7 +94,9 @@ public class EventoManager {
                             e.setCuposMaximos(nuevoMax);
                         }
                     }
+                    logger.info("Evento '{}' editado. Campo '{}' actualizado.", nombreEvento, campo);
                 } catch (Exception ex) {
+                    logger.error("Valor inválido para el campo '{}' en evento '{}': {}", campo, nombreEvento, ex.getMessage());
                     System.out.println("Valor inválido para el campo " + campo + ": " + ex.getMessage());
                     return false;
                 }
@@ -108,10 +118,14 @@ public class EventoManager {
                     writer.write(linea);
                     writer.newLine();
                 }
+                logger.info("Archivo de eventos actualizado tras edición.");
             } catch (IOException e) {
+                logger.error("Error al actualizar el archivo de eventos: {}", e.getMessage());
                 System.out.println("Error al actualizar el archivo: " + e.getMessage());
                 return false;
             }
+        } else {
+            logger.warn("Intento de editar evento no encontrado: '{}'", nombreEvento);
         }
 
         return encontrado;
@@ -146,10 +160,14 @@ public class EventoManager {
                     writer.write(linea);
                     writer.newLine();
                 }
+                logger.info("Evento eliminado: '{}'. Archivo de eventos actualizado.", nombreEvento);
             } catch (IOException e) {
+                logger.error("Error al actualizar el archivo tras eliminar evento '{}': {}", nombreEvento, e.getMessage());
                 System.out.println("Error al actualizar el archivo: " + e.getMessage());
                 return false;
             }
+        } else {
+            logger.warn("Intento de eliminar evento no encontrado: '{}'", nombreEvento);
         }
 
         return encontrado;
@@ -162,6 +180,7 @@ public class EventoManager {
             return e;
         }
     }
+    logger.info("Evento no encontrado en búsqueda: '{}'", nombreEvento);
     return null;
 }
 }
