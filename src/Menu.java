@@ -43,12 +43,16 @@ public class Menu {
             continue;
     }
 
-            // TODO: Implementar manejo de las distintas opciones
             switch (opcion) {
                 case 1 -> manejarEventos(scanner);
                 case 2 -> reporteManager.generarReporte();
                 case 3 -> manejarVenta(scanner);
                 case 4 -> manejarRegistrarDevolucion(scanner);
+                case 0 -> {
+                    System.out.println("Saliendo del programa. ¡Hasta luego!");
+                    salir = true;
+                    System.exit(0);
+                }
                 default -> {
                     System.out.println("Opción no válida");
                     salir = true;
