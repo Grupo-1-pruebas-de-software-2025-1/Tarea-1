@@ -7,14 +7,10 @@ import java.util.Scanner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 public class Menu {
     private static final Logger logger = LogManager.getLogger(Menu.class);
     private EventoManager eventoManager;
     private UsuarioManager usuarioManager;
-    private Usuario usuarioActual = null;
     private VentaManager ventaManager;
     private ReporteManager reporteManager;
 
@@ -93,7 +89,6 @@ public class Menu {
                     try {
                         Usuario usuario = usuarioManager.autenticar(nombre, clave);
                         if (usuario != null) {
-                            usuarioActual = usuario;
                             autenticado = true;
                             System.out.println("¡Bienvenido, " + usuario.getNombre() + "!");
                         } else {
@@ -154,7 +149,7 @@ public class Menu {
                 case 1 -> manejarCrearEvento(scanner);
                 case 2 -> manejarMostrarEventos(scanner);
                 case 3 -> manejarEditarEvento(scanner);
-                case 4 -> manejarRegistrarDevolucion(scanner);
+                case 4 -> manejarEliminarEvento(scanner);
                 case 0 -> volver = true; // Regresa al menú principal
                 default -> System.out.println("Opción no válida, intente de nuevo.");
             }
@@ -719,15 +714,5 @@ public class Menu {
                     e.getNombre(), desc, e.getFecha(), e.getCategoria(),
                     e.getPrecioEntrada(), e.getCuposDisponibles());
         }
-    }
-
-    private void imprimirEvento(Evento e) {
-        System.out.println("Nombre: " + e.getNombre() +
-                ", Descripción: " + e.getDescripcion() +
-                ", Fecha: " + e.getFecha() +
-                ", Categoría: " + e.getCategoria() +
-                ", Precio: " + e.getPrecioEntrada() +
-                ", Cupos: " + e.getCuposDisponibles());
-    }
-    
+    }    
 }
