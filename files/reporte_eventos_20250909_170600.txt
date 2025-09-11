@@ -1,0 +1,7 @@
+===== REPORTE DE EVENTOS =====
+Total de eventos registrados: 1
+Suma de cupos disponibles: 45
+No hay eventos agotados.
+==============================
+
+
