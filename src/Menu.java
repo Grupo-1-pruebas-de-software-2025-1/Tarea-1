@@ -5,8 +5,10 @@ import java.util.List;
 import java.util.Scanner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import java.io.Console;
 
 public class Menu {
+    private static final Logger logger = LogManager.getLogger(Menu.class);
     private EventoManager eventoManager;
     private UsuarioManager usuarioManager;
     private Usuario usuarioActual = null;
@@ -18,6 +20,7 @@ public class Menu {
         this.eventoManager = new EventoManager();
         this.ventaManager = new VentaManager(eventoManager);
         this.reporteManager = new ReporteManager(eventoManager);
+        this.usuarioManager = new UsuarioManager();
 
     }
 
