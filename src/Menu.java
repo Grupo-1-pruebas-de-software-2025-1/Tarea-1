@@ -46,7 +46,6 @@ public class Menu {
                 continue;
             }
 
-            // TODO: Implementar manejo de las distintas opciones
             switch (opcion) {
                 case 1 -> manejarEventos(scanner);
                 case 2 -> reporteManager.generarReporte();
@@ -147,7 +146,7 @@ public class Menu {
                 case 1 -> manejarCrearEvento(scanner);
                 case 2 -> manejarMostrarEventos();
                 case 3 -> manejarEditarEvento(scanner);
-                case 4 -> manejarRegistrarDevolucion(scanner);
+                case 4 -> manejarEliminarEvento(scanner);
                 case 0 -> volver = true; // Regresa al menú principal
                 default -> System.out.println("Opción no válida, intente de nuevo.");
             }
