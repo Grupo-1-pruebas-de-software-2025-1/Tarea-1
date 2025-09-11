@@ -82,11 +82,37 @@ public class Menu {
 
     private void manejarVenta(Scanner scanner) {
         scanner.nextLine(); // limpiar buffer
-        System.out.print("Ingrese el nombre del evento: ");
-        String nombreEvento = scanner.nextLine();
+        
+        String nombreEvento;
+        Evento evento = null;
+        do {
+            System.out.print("Ingrese el nombre del evento: ");
+            nombreEvento = scanner.nextLine().trim();
 
-        System.out.print("Ingrese la cantidad de entradas: ");
-        int cantidad = scanner.nextInt();
+            if (nombreEvento.isEmpty()) {
+                System.out.println("⚠️ El nombre no puede estar vacío. Intente nuevamente.");
+                continue;
+            }
+
+            evento = eventoManager.buscarEvento(nombreEvento);
+            if (evento == null) {
+                System.out.println("❌ El evento \"" + nombreEvento + "\" no existe. Intente nuevamente.");
+            }
+        } while (evento == null);
+
+        int cantidad = -1;
+        while (cantidad <= 0) {
+            System.out.print("Ingrese la cantidad de entradas: ");
+            if (scanner.hasNextInt()) {
+                cantidad = scanner.nextInt();
+                if (cantidad <= 0) {
+                    System.out.println("⚠️ La cantidad debe ser mayor a 0.");
+                }
+            } else {
+                System.out.println("❌ Debe ingresar un número válido.");
+                scanner.nextLine(); // limpiar entrada inválida
+            }
+        }
 
         boolean exito = ventaManager.registrarVenta(nombreEvento, cantidad);
 
@@ -95,16 +121,42 @@ public class Menu {
         } else {
             System.out.println("🔴 Venta no realizada.");
         }
-    }      
+    }
 
     private void manejarRegistrarDevolucion(Scanner scanner) {
-        System.out.print("Ingrese el nombre del evento: ");
-        scanner.nextLine(); // limpiar buffer
-        String nombreEvento = scanner.nextLine();
+        String nombreEvento;
+        int cantidad;
 
-        System.out.print("Ingrese la cantidad de entradas a devolver: ");
-        int cantidad = scanner.nextInt();
+        // 1. Pedir evento hasta que exista
+        while (true) {
+            System.out.print("Ingrese el nombre del evento: ");
+            nombreEvento = scanner.nextLine().trim(); // solo una vez
 
+            Evento evento = eventoManager.buscarEvento(nombreEvento);
+            if (evento != null) {
+                break; // existe, seguimos
+            }
+            System.out.println("❌ El evento no existe. Intente nuevamente.");
+        }
+
+        // 2. Pedir cantidad hasta que sea número válido (>0)
+        while (true) {
+            System.out.print("Ingrese la cantidad de entradas a devolver: ");
+            String input = scanner.nextLine().trim(); // solo una vez
+
+            try {
+                cantidad = Integer.parseInt(input);
+                if (cantidad > 0) {
+                    break; // válido
+                } else {
+                    System.out.println("❌ La cantidad debe ser mayor a 0.");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("❌ Entrada inválida. Debe ingresar un número.");
+            }
+        }
+
+        // 3. Registrar devolución
         boolean exito = ventaManager.registrarDevolucion(nombreEvento, cantidad);
         if (exito) {
             System.out.println("✅ Devolución registrada correctamente.");
@@ -112,6 +164,8 @@ public class Menu {
             System.out.println("❌ No se pudo registrar la devolución.");
         }
     }
+
+    
 
 
     private void manejarCrearEvento(Scanner scanner) {
